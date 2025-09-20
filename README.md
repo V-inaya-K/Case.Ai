@@ -18,6 +18,13 @@
  - MongoDB(via Motor) – Database to store user accounts, uploaded documents, summaries, chat history, etc.
  - Google Generative AI(Gemini API) – Core AI engine used for generating summaries, Q&A, and multi-language responses.
 
+## Revenue Model
+
+ - Every User gets 2 free uploads per week, and has to pay 50Rs. per upload there after
+ - Apart from this, Case ai also has subscription
+    - Rs 1199/month gives unlimited upload,better summaries, fast response
+    - Rs 9999/year gives unlimited upload,better summaries, fast response
+ 
 ## 🌀Workflow
  1. User selects a PDF/DOCX file.
  2. React frontend sends document to FastAPI backend.

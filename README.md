@@ -1,4 +1,3 @@
-![Animated GIF](https://i.gifer.com/J4o.gif)
 # 😎Case.ai
 
  1. Case.AI is a smart AI-driven assistant that makes legal document management easy.

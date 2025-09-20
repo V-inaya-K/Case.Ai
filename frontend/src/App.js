@@ -20,11 +20,19 @@ function App() {
   const [chatHistory, setChatHistory] = useState([]);
   const [asking, setAsking] = useState(false);
   const [currentSummary, setCurrentSummary] = useState(null);
+  const [tone, setTone] = useState("professional"); // New tone state
+  
 
   const languageOptions = {
     english: "English",
     hindi: "हिंदी",
     punjabi: "ਪੰਜਾਬੀ",
+  };
+
+  const toneOptions = {
+    professional: "Professional",
+    friendly: "Friendly",
+    casual: "Casual",
   };
 
   // Login
@@ -56,6 +64,7 @@ function App() {
     const formData = new FormData();
     formData.append("file", uploadFile);
     formData.append("user_id", user.id);
+    formData.append("tone", tone); // send tone to backend
 
     setUploading(true);
     try {
@@ -271,6 +280,18 @@ function App() {
                 onChange={(e) => setUploadFile(e.target.files[0])}
                 className="w-full px-3 py-2 rounded-lg bg-white/10 border border-white/20 text-white file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-blue-600 file:text-white file:cursor-pointer"
               />
+              <div className="flex items-center space-x-2">
+                <label className="text-white">Tone:</label>
+                <select
+                  value={tone}
+                  onChange={(e) => setTone(e.target.value)}
+                  className="px-2 py-1 rounded-lg bg-white/10 border border-white/20 text-white"
+                >
+                  {Object.entries(toneOptions).map(([key, label]) => (
+                    <option key={key} value={key} className="bg-gray-800">{label}</option>
+                  ))}
+                </select>
+              </div>
               <button
                 onClick={handleUpload}
                 disabled={!uploadFile || uploading}
@@ -283,32 +304,39 @@ function App() {
           </div>
 
           {/* Documents List */}
-          <div className="bg-white/15 backdrop-blur-lg rounded-xl p-6 border border-white/20">
-            <h2 className="text-xl font-semibold text-white mb-4">Your Documents</h2>
-            <div className="space-y-2 max-h-96 overflow-y-auto">
-              {documents.map((doc) => (
-                <div
-                  key={doc.id}
-                  className={`p-3 rounded-lg border cursor-pointer flex justify-between items-center transition-colors ${
-                    selectedDocument?.id === doc.id
-                      ? "bg-blue-600/30 border-blue-400"
-                      : "bg-white/5 border-white/10 hover:bg-white/10"
-                  }`}
-                >
-                  <div onClick={() => selectDocument(doc)}>
-                    <p className="text-white font-medium truncate">{doc.filename}</p>
-                    <p className="text-blue-200 text-sm">{new Date(doc.upload_date).toLocaleDateString()}</p>
-                  </div>
-                  <button
-                    onClick={() => handleViewPDF(doc)}
-                    className="px-2 py-1 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-sm"
-                  >
-                    Download
-                  </button>
-                </div>
-              ))}
-            </div>
+<div className="bg-white/15 backdrop-blur-lg rounded-xl p-6 border border-white/20">
+  <h2 className="text-xl font-semibold text-white mb-4">Your Documents</h2>
+  <div className="space-y-2 max-h-96 overflow-y-auto">
+    {documents.map((doc) => (
+      <div
+        key={doc.id}
+        className={`p-3 rounded-lg border cursor-pointer flex flex-col transition-colors ${
+          selectedDocument?.id === doc.id
+            ? "bg-blue-600/30 border-blue-400"
+            : "bg-white/5 border-white/10 hover:bg-white/10"
+        }`}
+      >
+        <div className="flex justify-between items-center mb-2">
+          <div onClick={() => selectDocument(doc)}>
+            <p className="text-white font-medium truncate">{doc.filename}</p>
+            <p className="text-blue-200 text-sm">{new Date(doc.upload_date).toLocaleDateString()}</p>
           </div>
+          <button
+            onClick={() => handleViewPDF(doc)}
+            className="px-2 py-1 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-sm"
+          >
+            Download
+          </button>
+        </div>
+        {/* Display Tone for each document */}
+        <p className="text-yellow-300 text-sm mt-1">
+          Tone: {toneOptions[tone] || "Professional"}
+        </p>
+      </div>
+    ))}
+  </div>
+</div>
+
         </div>
 
         {/* Middle Panel - Summary */}

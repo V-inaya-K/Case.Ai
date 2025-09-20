@@ -1,4 +1,10 @@
-# ⚓Case.ai
+# 😎Case.ai
+
+ 1. Case.AI is a smart AI-driven assistant that makes legal document management easy.
+ 2. It automatically extracts and summarizes important details from long PDFs in simple, professional language.
+ 3. Case.ai has support for multiple languages—English, Hindi, and Punjabi—making it easy to understand by various users.
+ 4. Users can query their documents with questions and get accurate, context-sensitive responses.
+ 5. Case.AI saves time and minimizes manual effort, enabling legal professionals to make quicker, better-informed decisions.
 
 ## ✨Demo Images
 

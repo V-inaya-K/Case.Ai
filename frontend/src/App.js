@@ -301,7 +301,7 @@ function App() {
                   </div>
                   <button
                     onClick={() => handleViewPDF(doc)}
-                    className="px-2 py-1 bg-purple-600 hover:bg-purple-700 text-white rounded-lg text-sm"
+                    className="px-2 py-1 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-sm"
                   >
                     Download
                   </button>

@@ -39,4 +39,3 @@
  **Step6:** COMMANDS: cd frontend => npm install => npm start<br />
  **Step7:** COMMANDS: cd backend => pip install -r requirements.txt => python -m uvicorn server:app --reload
  
-## 🚀Future Ambitions

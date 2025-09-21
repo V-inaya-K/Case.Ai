@@ -560,7 +560,7 @@
 
 from fastapi import FastAPI, APIRouter, UploadFile, File, Form, HTTPException
 from fastapi.responses import JSONResponse
-from starlette.middleware.cors import CORSMiddleware
+from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
 from typing import List
 from pathlib import Path
@@ -574,6 +574,7 @@ from dotenv import load_dotenv
 from motor.motor_asyncio import AsyncIOMotorClient
 import google.generativeai as genai
 from contextlib import asynccontextmanager
+import certifi
 
 # ---------------- Load environment ----------------
 ROOT_DIR = Path(__file__).parent
@@ -583,7 +584,13 @@ print("API key loaded?", os.getenv("GOOGLE_API_KEY") is not None)
 # ---------------- MongoDB setup ----------------
 mongo_url = os.environ.get("MONGO_URL")
 db_name = os.environ.get("DB_NAME")
-client = AsyncIOMotorClient(mongo_url)
+
+client = AsyncIOMotorClient(
+    mongo_url,
+    tls=True,
+    tlsCAFile=certifi.where(),
+    serverSelectionTimeoutMS=30000
+)
 db = client[db_name]
 
 # ---------------- Google Gen AI ----------------
@@ -826,6 +833,11 @@ async def get_chat_history(document_id: str, user_id: str):
 # ---------------- App setup ----------------
 app.include_router(api_router)
 
+@app.get("/")
+def root():
+    return {"message": "API is live!"}
+
+# CORS setup
 app.add_middleware(
     CORSMiddleware,
     allow_credentials=True,
@@ -834,5 +846,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# Logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
+

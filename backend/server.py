@@ -574,6 +574,8 @@ from dotenv import load_dotenv
 from motor.motor_asyncio import AsyncIOMotorClient
 import google.generativeai as genai
 from contextlib import asynccontextmanager
+import certifi
+import ssl
 
 # ---------------- Load environment ----------------
 ROOT_DIR = Path(__file__).parent
@@ -583,7 +585,13 @@ print("API key loaded?", os.getenv("GOOGLE_API_KEY") is not None)
 # ---------------- MongoDB setup ----------------
 mongo_url = os.environ.get("MONGO_URL")
 db_name = os.environ.get("DB_NAME")
-client = AsyncIOMotorClient(mongo_url)
+
+# Use certifi CA bundle for SSL
+client = AsyncIOMotorClient(
+    mongo_url,
+    tls=True,
+    tlsCAFile=certifi.where()
+)
 db = client[db_name]
 
 # ---------------- Google Gen AI ----------------
@@ -828,19 +836,16 @@ app.include_router(api_router)
 def root():
     return {"message": "API is live!"}
 
-# ---------------- CORS setup ----------------
-origins = os.environ.get("CORS_ORIGINS", "").split(",")
-origins = [o.strip() for o in origins if o.strip()]  # remove empty strings
-
+# CORS setup
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins,       # frontend domain(s)
+    allow_origins=os.environ.get("CORS_ORIGINS", "*").split(","),  # comma-separated list in .env
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-# ---------------- Logging setup ----------------
+# Logging setup
 logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"

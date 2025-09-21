@@ -198,11 +198,13 @@ function App() {
 
   if (!user) {
     return (
+      
       <div className="min-h-screen bg-gradient-to-br from-blue-900 via-purple-900 to-indigo-900 flex items-center justify-center p-4">
+        {/* Auth Page Starts */}
         <div className="bg-white/15 backdrop-blur-lg rounded-2xl p-8 w-full max-w-md border border-white/20">
           <div className="text-center mb-8">
-            <h1 className="text-4xl font-bold text-white mb-2">Case-AI</h1>
-            <p className="text-blue-200">Your Legal Document Assistant</p>
+            <h1 className="text-4xl font-bold text-white mb-2">Case Ai</h1>
+            <p className="text-blue-100">Your Legal Assistant</p>
           </div>
           <div className="space-y-4">
             <input
@@ -210,7 +212,7 @@ function App() {
               placeholder="Enter your email to continue"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full px-4 py-3 rounded-lg bg-white/10 border border-white/20 text-white placeholder-blue-200 focus:outline-none focus:ring-2 focus:ring-blue-400"
+              className="w-full px-4 py-3 rounded-lg bg-white/10 border border-white/20 text-white placeholder-blue-100 focus:outline-none focus:ring-2 focus:ring-blue-400"
               onKeyPress={(e) => e.key === "Enter" && handleLogin()}
             />
             <button
@@ -221,6 +223,7 @@ function App() {
             </button>
           </div>
         </div>
+        {/* Auth Page Starts */}
       </div>
     );
   }
@@ -228,13 +231,12 @@ function App() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-900 via-purple-900 to-indigo-900 flex flex-col">
      <div className="fixed top-0 left-0 right-0 z-50 bg-white/15 backdrop-blur-lg border-b border-white/20 p-4 flex justify-between items-center">
-  {/* Left - Logo */}
+
   <div>
     <h1 className="text-2xl font-bold text-white">Case Ai</h1>
     <p className="text-blue-100">Welcome, {user.email}</p>
   </div>
 
-  {/* Right - Actions */}
   <div className="flex items-center space-x-4 text-white">
     <p className="text-sm">Uploads Used: {user.uploads_used}/2 free</p>
     {user.uploads_used >= 2 && <p className="text-yellow-300 text-sm">₹50/upload extra</p>}
@@ -302,8 +304,8 @@ function App() {
               <p className="text-sm text-blue-100">First 2 uploads free, then ₹50 per document</p>
             </div>
           </div>
-
-          {/* Documents List */}
+{/* Left Panel Ends*/}
+          {/* Documents List Starts*/}
 <div className="bg-white/15 backdrop-blur-lg rounded-xl p-6 border border-white/20">
   <h2 className="text-xl font-semibold text-white mb-4">Your Documents</h2>
   <div className="space-y-2 max-h-96 overflow-y-auto">
@@ -328,13 +330,13 @@ function App() {
             Download
           </button>
         </div>
-        {/* Display Tone for each document */}
         <p className="text-yellow-300 text-sm mt-1">
           Tone: {toneOptions[tone] || "Professional"}
         </p>
       </div>
     ))}
   </div>
+   {/* Documents List Ends */}
 </div>
 
         </div>
@@ -388,7 +390,7 @@ function App() {
           )}
         </div>
 
-        {/* Right Panel - Q&A */}
+        {/* Right Panel Starts*/}
         <div className="bg-white/15 backdrop-blur-lg rounded-xl p-6 border border-white/20">
           <h2 className="text-xl font-semibold text-white mb-4">Ask Questions</h2>
           {selectedDocument ? (
@@ -471,15 +473,15 @@ function App() {
     </tbody>
   </table>
 </div>
+{/* Right Panel Starts*/}
 
-{/* Reviews Carousel */}
+{/* Carousel Starts */}
      <div className="bg-white/15 backdrop-blur-lg rounded-xl p-6 border border-white/20 max-w-7xl mx-auto mt-6 w-full relative">
       <h2 className="text-xl font-semibold text-white mb-6 text-center">
         What people think Case Ai?
       </h2>
 
       <div className="flex items-center justify-center gap-4">
-        {/* Prev */}
         <button
           onClick={prevSlide}
           aria-label="Previous review"
@@ -488,7 +490,6 @@ function App() {
           <ChevronLeft size={20} />
         </button>
 
-        {/* Single active card */}
         <div className="w-full max-w-[720px] h-56 flex items-center justify-center overflow-hidden">
           <div
             key={activeIndex}
@@ -510,8 +511,6 @@ function App() {
             </div>
           </div>
         </div>
-
-        {/* Next */}
         <button
           onClick={nextSlide}
           aria-label="Next review"
@@ -521,7 +520,7 @@ function App() {
         </button>
       </div>
     </div>
-      {/* Footer */}
+      {/* Footer Starts */}
 <footer className="bg-white/15 backdrop-blur-lg border-t border-white/20 py-4 mt-6">
   <div className="max-w-7xl mx-auto px-6 flex flex-col sm:flex-row justify-between items-center text-sm text-blue-100">
     <p>© {new Date().getFullYear()} Case-AI. All rights reserved.</p>

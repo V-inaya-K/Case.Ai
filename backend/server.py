@@ -572,6 +572,7 @@ import logging
 import PyPDF2
 from dotenv import load_dotenv
 from motor.motor_asyncio import AsyncIOMotorClient
+import certifi
 import google.generativeai as genai
 from contextlib import asynccontextmanager
 
@@ -583,12 +584,10 @@ print("API key loaded?", os.getenv("GOOGLE_API_KEY") is not None)
 # ---------------- MongoDB setup ----------------
 mongo_url = os.environ.get("MONGO_URL")
 db_name = os.environ.get("DB_NAME")
-
-# Quick hack to bypass SSL errors on Render
 client = AsyncIOMotorClient(
     mongo_url,
     tls=True,
-    tlsAllowInvalidCertificates=True,
+    tlsCAFile=certifi.where(),
     serverSelectionTimeoutMS=30000
 )
 db = client[db_name]
@@ -692,15 +691,12 @@ async def generate_summary(content: str, language: str = "english", tone: str = 
             response = model.generate_content(prompt)
             if hasattr(response, "candidates") and response.candidates:
                 candidate = response.candidates[0]
-                if hasattr(candidate, "content"):
-                    if hasattr(candidate.content, "text"):
-                        summaries.append(candidate.content.text)
-                    elif hasattr(candidate.content, "parts") and candidate.content.parts:
-                        summaries.append(candidate.content.parts[0].text)
-                    else:
-                        summaries.append(str(candidate.content))
+                if hasattr(candidate.content, "text"):
+                    summaries.append(candidate.content.text)
+                elif hasattr(candidate.content, "parts") and candidate.content.parts:
+                    summaries.append(candidate.content.parts[0].text)
                 else:
-                    summaries.append(str(candidate))
+                    summaries.append(str(candidate.content))
             elif hasattr(response, "text"):
                 summaries.append(response.text)
             else:
@@ -763,8 +759,7 @@ async def upload_document(
     user = await db.users.find_one({"id": user_id})
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
-    user_obj = User(**user)
-    if user_obj.uploads_used >= 2:
+    if user["uploads_used"] >= 2:
         return JSONResponse(status_code=402, content={"detail": "Free uploads exceeded. ₹50 required."})
 
     content = await file.read()
@@ -794,7 +789,7 @@ async def upload_document(
         "document_id": document.id,
         "message": "Document uploaded and summarized",
         "summary": {"english": summary_en, "hindi": summary_hi, "punjabi": summary_pa},
-        "uploads_remaining": 2 - (user_obj.uploads_used + 1)
+        "uploads_remaining": 2 - (user["uploads_used"] + 1)
     }
 
 @api_router.get("/documents/{user_id}", response_model=List[Document])
@@ -843,5 +838,6 @@ app.add_middleware(
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
+
 
 

@@ -828,16 +828,19 @@ app.include_router(api_router)
 def root():
     return {"message": "API is live!"}
 
-# CORS setup
+# ---------------- CORS setup ----------------
+origins = os.environ.get("CORS_ORIGINS", "").split(",")
+origins = [o.strip() for o in origins if o.strip()]  # remove empty strings
+
 app.add_middleware(
     CORSMiddleware,
+    allow_origins=origins,       # frontend domain(s)
     allow_credentials=True,
-    allow_origins=os.environ.get("CORS_ORIGINS", "*").split(","),
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-# Logging setup
+# ---------------- Logging setup ----------------
 logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"

@@ -826,20 +826,21 @@ async def get_chat_history(document_id: str, user_id: str):
     return [ChatMessage(**msg) for msg in msgs]
 
 # ---------------- App setup ----------------
+# ---------------- App setup ----------------
 app.include_router(api_router)
 
-origins = [
-    "https://case-ai-bjo4.vercel.app",  # your Vercel frontend
-    "http://localhost:3000",            # local dev (optional)
-]
-
+# ✅ Explicitly define CORS
 app.add_middleware(
     CORSMiddleware,
+    allow_origins=[
+        "https://case-ai-bjo4.vercel.app",  # Vercel frontend
+        "http://localhost:3000",            # local dev
+    ],
     allow_credentials=True,
-    allow_origins=os.environ.get("CORS_ORIGINS", "*").split(","),
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)

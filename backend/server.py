@@ -828,6 +828,11 @@ async def get_chat_history(document_id: str, user_id: str):
 # ---------------- App setup ----------------
 app.include_router(api_router)
 
+origins = [
+    "https://case-ai-bjo4.vercel.app",  # your Vercel frontend
+    "http://localhost:3000",            # local dev (optional)
+]
+
 app.add_middleware(
     CORSMiddleware,
     allow_credentials=True,

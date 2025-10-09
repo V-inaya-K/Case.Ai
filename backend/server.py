@@ -117,7 +117,7 @@ async def generate_summary(content: str, language: str = "english", tone: str = 
     for chunk in chunks:
         prompt = prompt_template.format(style=style) + "\n\n" + chunk
         try:
-            model = genai.GenerativeModel("gemini-1.5-flash")
+            model = genai.GenerativeModel("gemini-2.5-flash")
             response = model.generate_content(prompt)
             if hasattr(response, "candidates") and response.candidates:
                 candidate = response.candidates[0]
